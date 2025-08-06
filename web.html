@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mood Color Palette</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      transition: all 0.5s ease;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-bottom: 4px solid;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .mood-buttons {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .mood-buttons button {
+      margin: 0.3rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .mood-buttons button:hover {
+      opacity: 0.8;
+    }
+
+    .palette-display {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 2rem;
+      gap: 1rem;
+    }
+
+    .color-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header id="main-header">
+    <h1>Mood Color Palette Generator</h1>
+  </header>
+
+  <div class="mood-buttons">
+    <button onclick="changeMood('happy')">Happy</button>
+    <button onclick="changeMood('calm')">Calm</button>
+    <button onclick="changeMood('energetic')">Energetic</button>
+    <button onclick="changeMood('romantic')">Romantic</button>
+    <button onclick="changeMood('sad')">Sad</button>
+  </div>
+
+  <div class="palette-display" id="palette"></div>
+
+  <footer>
+    &copy; 2025 Mood Palette. All rights reserved.
+  </footer>
+
+  <script>
+    const palettes = {
+      happy: {
+        bg: '#FFF9C4',
+        accent1: '#FFD54F',
+        accent2: '#FFF176',
+        border: '#FBC02D',
+        colors: ['#FFF9C4', '#FFD54F', '#FFF176', '#FBC02D']
+      },
+      calm: {
+        bg: '#E0F7FA',
+        accent1: '#80DEEA',
+        accent2: '#4DD0E1',
+        border: '#00ACC1',
+        colors: ['#E0F7FA', '#80DEEA', '#4DD0E1', '#00ACC1']
+      },
+      energetic: {
+        bg: '#FFEBEE',
+        accent1: '#FF5252',
+        accent2: '#FF1744',
+        border: '#D50000',
+        colors: ['#FFEBEE', '#FF5252', '#FF1744', '#D50000']
+      },
+      romantic: {
+        bg: '#FCE4EC',
+        accent1: '#F06292',
+        accent2: '#EC407A',
+        border: '#AD1457',
+        colors: ['#FCE4EC', '#F06292', '#EC407A', '#AD1457']
+      },
+      sad: {
+        bg: '#ECEFF1',
+        accent1: '#90A4AE',
+        accent2: '#78909C',
+        border: '#607D8B',
+        colors: ['#ECEFF1', '#90A4AE', '#78909C', '#607D8B']
+      }
+    };
+
+    function changeMood(mood) {
+      const { bg, accent1, accent2, border, colors } = palettes[mood];
+
+      // Set background and header
+      document.body.style.backgroundColor = bg;
+      document.body.style.color = '#333';
+      const header = document.getElementById('main-header');
+      header.style.backgroundColor = accent1;
+      header.style.borderBottom = `4px solid ${border}`;
+
+      // Style buttons
+      document.querySelectorAll('.mood-buttons button').forEach(btn => {
+        btn.style.backgroundColor = accent2;
+        btn.style.color = '#333';
+      });
+
+      // Create color boxes
+      const paletteContainer = document.getElementById('palette');
+      paletteContainer.innerHTML = '';
+      colors.forEach(color => {
+        const box = document.createElement('div');
+        box.className = 'color-box';
+        box.style.backgroundColor = color;
+        box.style.color = getContrastYIQ(color);
+        box.textContent = color;
+        paletteContainer.appendChild(box);
+      });
+    }
+
+    // Ensure color text is visible
+    function getContrastYIQ(hexcolor) {
+      hexcolor = hexcolor.replace('#', '');
+      const r = parseInt(hexcolor.substr(0, 2), 16);
+      const g = parseInt(hexcolor.substr(2, 2), 16);
+      const b = parseInt(hexcolor.substr(4, 2), 16);
+      const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      return (yiq >= 128) ? '#000' : '#fff';
+    }
+
+    // Set default mood
+    changeMood('happy');
+  </script>
+</body>
+</html>
